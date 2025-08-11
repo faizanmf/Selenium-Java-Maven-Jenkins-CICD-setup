@@ -6,7 +6,7 @@ pipeline {
     }
 
     triggers {
-        cron('H/5 * * * *') // Run every 5 minutes
+        cron('H H * * *') // Run every 5 minutes
     }
 
     stages {
