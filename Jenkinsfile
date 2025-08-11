@@ -1,30 +1,24 @@
 pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/your-repo/selenium-ci-cd.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage('Report') {
-            steps {
-                publishHTML([allowMissing: false,
-                             alwaysLinkToLastBuild: false,
-                             keepAll: true,
-                             reportDir: 'target/surefire-reports',
-                             reportFiles: 'index.html',
-                             reportName: 'TestNG Report'])
-            }
-        }
+  agent any
+  tools { maven 'Maven 3.9' } // name from Global Tool Configuration
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
     }
+    stage('Build & Test') {
+      steps {
+        sh 'mvn -B clean test'
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/*.xml'
+          archiveArtifacts artifacts: '**/target/*.jar, **/target/allure-results/**', fingerprint: true
+        }
+      }
+    }
+  }
+  triggers {
+     cron example (optional)
+     cron('H H * * *')
+  }
 }
