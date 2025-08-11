@@ -18,7 +18,7 @@ pipeline {
     }
   }
   triggers {
-     cron example (optional)
-     cron('H H * * *')
+    // cron example (optional)
+    // cron('H H * * *')
   }
 }
