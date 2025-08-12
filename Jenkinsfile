@@ -2,29 +2,39 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9' // Name as configured in "Manage Jenkins" → Global Tool Configuration
+        maven 'Default'
+        jdk 'Default'
     }
 
     triggers {
-        cron('H H * * *') // Run every 5 minutes
+        pollSCM('H/5 * * * *') // Checks repo every 5 minutes
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/your-username/your-repo.git'
             }
         }
-        stage('Build & Test') {
+
+        stage('Build & Test - Chrome') {
             steps {
-                sh 'mvn -B clean test'
+                sh "mvn clean test -Dbrowser=chrome"
             }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                    archiveArtifacts artifacts: '**/target/*.jar, **/target/allure-results/**', fingerprint: true
-                }
+        }
+
+        stage('Build & Test - Firefox') {
+            steps {
+                sh "mvn clean test -Dbrowser=firefox"
             }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
