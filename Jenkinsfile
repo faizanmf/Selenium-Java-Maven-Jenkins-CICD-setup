@@ -35,19 +35,14 @@ pipeline {
         always {
             archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
             junit '**/target/surefire-reports/*.xml'
-        }
-        success {
+
             emailext(
-                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "Build was successful!\nCheck console output at ${env.BUILD_URL} to view the results.",
-                to: 'faizanmf.5252@gmail.com'
-            )
-        }
-        failure {
-            emailext(
-                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "Build failed!\nCheck console output at ${env.BUILD_URL} to view the results.",
-                to: 'faizanmf.5252@gmail.com'
+                to: 'faizanmf.5252@gmail.com',
+                subject: "Jenkins Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """<p>Hi,</p>
+                         <p>The Jenkins build has completed with status: <b>${currentBuild.currentResult}</b></p>
+                         <p>Check console output at: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
+                mimeType: 'text/html'
             )
         }
     }
