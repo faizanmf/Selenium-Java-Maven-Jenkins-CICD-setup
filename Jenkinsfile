@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/your-username/your-repo.git'
+                    url: 'https://github.com/faizanmf/Selenium-Java-Maven-Jenkins-CICD-setup.git'
             }
         }
 
@@ -40,14 +40,14 @@ pipeline {
             emailext(
                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Build was successful!\nCheck console output at ${env.BUILD_URL} to view the results.",
-                to: 'your-email@example.com'
+                to: 'faizanmf.5252@gmail.com'
             )
         }
         failure {
             emailext(
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Build failed!\nCheck console output at ${env.BUILD_URL} to view the results.",
-                to: 'your-email@example.com'
+                to: 'faizanmf.5252@gmail.com'
             )
         }
     }
