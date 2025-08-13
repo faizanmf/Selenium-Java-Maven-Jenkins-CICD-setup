@@ -7,7 +7,7 @@ pipeline {
     }
 
     triggers {
-        pollSCM('H/5 * * * *') // Checks repo every 5 minutes
+        pollSCM('H/5 * * * *')
     }
 
     stages {
@@ -38,19 +38,17 @@ pipeline {
         }
         success {
             emailext(
-                subject: "✅ Build Successful - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "The build was successful!\n\nCheck details: ${env.BUILD_URL}",
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "Build was successful!\nCheck console output at ${env.BUILD_URL} to view the results.",
                 to: 'your-email@example.com'
             )
         }
         failure {
             emailext(
-                subject: "❌ Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "The build failed!\n\nCheck details: ${env.BUILD_URL}",
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: "Build failed!\nCheck console output at ${env.BUILD_URL} to view the results.",
                 to: 'your-email@example.com'
             )
         }
     }
 }
-
-////////////
