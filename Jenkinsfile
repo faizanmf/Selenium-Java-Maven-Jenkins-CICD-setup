@@ -36,6 +36,21 @@ pipeline {
             archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
             junit '**/target/surefire-reports/*.xml'
         }
+        success {
+            emailext(
+                subject: "✅ Build Successful - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build was successful!\n\nCheck details: ${env.BUILD_URL}",
+                to: 'your-email@example.com'
+            )
+        }
+        failure {
+            emailext(
+                subject: "❌ Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The build failed!\n\nCheck details: ${env.BUILD_URL}",
+                to: 'your-email@example.com'
+            )
+        }
     }
 }
+
 ////////////
